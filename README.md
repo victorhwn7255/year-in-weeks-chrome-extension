@@ -1,10 +1,11 @@
+![Year Progress Tracker Banner](banner.png)
+
 # Year Progress Tracker
 
-A minimalist Chrome extension that transforms your new tab into a powerful year visualization tool. Track your progress through the year with elegant design and real-time updates, inspired by the clean aesthetic of Visualize Value.
-
-## What This Extension Does
-
-This Chrome extension replaces your default new tab with a comprehensive year tracking dashboard that helps you visualize time's passage and stay mindful of your annual progress. Perfect for goal-setters, productivity enthusiasts, and anyone who wants a beautiful, functional new tab experience.
+A minimalist Chrome extension that transforms your new tab into a powerful year visualization tool. 
+- Track your progress through the year with elegant design and real-time updates. 
+- Helps you visualize time's passage and stay mindful of your annual progress. 
+- Perfect for goal-setters, productivity enthusiasts, and anyone who wants a beautiful, functional new tab experience.
 
 ## Key Features
 
@@ -50,6 +51,6 @@ Built-in leap year detection and configurable year settings. Default tracks 2026
 
 ## Credits
 
-Design inspired by [Visualize Value](https://visualizevalue.com) by Jack Butcher.
+Design inspired by [Visualize Value](https://visualizevalue.com) (Jack Butcher).
 
 
