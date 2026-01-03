@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Year In Weeks",
+  "name": "Year in Days",
   "version": "1.0.0",
   "description": "A minimalist year-at-a-glance visual tracker with airport-style flip clock",
   "chrome_url_overrides": {

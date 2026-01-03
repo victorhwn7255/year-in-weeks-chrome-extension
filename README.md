@@ -1,6 +1,6 @@
 ![Year Progress Tracker Banner](banner.png)
 
-# Year Progress Tracker
+# 365 Days = 365 Circles
 
 A minimalist Chrome extension that transforms your new tab into a powerful year visualization tool. 
 - Track your progress through the year with elegant design and real-time updates. 
