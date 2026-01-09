@@ -1,4 +1,4 @@
-const YEAR = 2026; `change in 2027`
+const YEAR = 2026;
 
 function isLeapYear(year) {
   return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
@@ -239,12 +239,83 @@ function update() {
       dayElement.classList.add('current');
     }
   });
+
+  // Update compound screen
+  updateCompoundScreen(currentDayOfYear);
+}
+
+// ========== COMPOUND SCREEN FUNCTIONS ==========
+function generateCurvePoints() {
+  const points = [];
+  const startX = 20;
+  const endX = 355;
+  const startY = 175;
+  const endY = 20;
+  const graphWidth = endX - startX;
+  const graphHeight = startY - endY;
+  
+  for (let d = 0; d <= 365; d += 3) {
+    const x = startX + (d / 365) * graphWidth;
+    const y = startY - ((Math.pow(1.01, d) - 1) / 36.78) * graphHeight;
+    points.push(`${x},${y}`);
+  }
+  return points.join(' ');
+}
+
+function updateCompoundScreen(dayOfYear) {
+  const multiplier = Math.pow(1.01, dayOfYear).toFixed(2);
+  
+  // Update multiplier display with formula format
+  document.querySelector('#multiplier .exponent').textContent = dayOfYear;
+  document.querySelector('#multiplier .result').textContent = multiplier;
+  
+  document.getElementById('day-counter').textContent = `Day ${dayOfYear} of 365`;
+  
+  // Update dot position
+  const startX = 20;
+  const endX = 355;
+  const startY = 175;
+  const endY = 20;
+  const graphWidth = endX - startX;
+  const graphHeight = startY - endY;
+  
+  const dotX = startX + (dayOfYear / 365) * graphWidth;
+  const dotY = startY - ((Math.pow(1.01, dayOfYear) - 1) / 36.78) * graphHeight;
+  
+  const dot = document.getElementById('current-dot');
+  dot.setAttribute('cx', dotX);
+  dot.setAttribute('cy', dotY);
+}
+
+function initCompoundScreen() {
+  // Generate and set the curve points
+  const curve = document.getElementById('exp-curve');
+  curve.setAttribute('points', generateCurvePoints());
+}
+
+// ========== TOGGLE FUNCTIONALITY ==========
+let showingCompound = false;
+
+function toggleScreen() {
+  const yearScreen = document.getElementById('year-progress-screen');
+  const compoundScreen = document.getElementById('compound-screen');
+  
+  showingCompound = !showingCompound;
+  
+  if (showingCompound) {
+    yearScreen.classList.add('hidden');
+    compoundScreen.classList.add('active');
+  } else {
+    yearScreen.classList.remove('hidden');
+    compoundScreen.classList.remove('active');
+  }
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
   createGrid();
   initFlipClock();
+  initCompoundScreen();
   
   // Initial update
   const now = new Date();
@@ -269,6 +340,12 @@ document.addEventListener('DOMContentLoaded', function() {
       dayElement.classList.add('current');
     }
   });
+
+  // Initial compound screen update
+  updateCompoundScreen(currentDayOfYear);
+  
+  // Toggle button event
+  document.getElementById('toggle-btn').addEventListener('click', toggleScreen);
   
   // Start interval
   setInterval(update, 1000);
