@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Year in Days",
-  "version": "1.0.0",
-  "description": "A minimalist year-at-a-glance visual tracker with airport-style flip clock",
+  "version": "1.1.0",
+  "description": "A minimalist year-at-a-glance visual tracker with airport-style flip clock and kanban board",
+  "permissions": ["storage"],
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },

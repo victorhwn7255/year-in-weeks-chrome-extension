@@ -55,7 +55,8 @@ body {
 }
 
 .percentage {
-  font-size: clamp(80px, 18vw, 180px);
+  margin-top: clamp(-25px, -2vw, 0px); 
+  font-size: clamp(60px, 16vw, 170px);
   font-weight: 600;
   letter-spacing: -0.05em;
   line-height: 0.9;
@@ -263,12 +264,12 @@ body {
 .grid {
   display: grid;
   grid-template-columns: repeat(27, 10px);
-  gap: 5px;
+  gap: 8px;
 }
 
 .day {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   background: var(--grey);
   transition: all 0.3s ease;
@@ -483,11 +484,10 @@ body {
   color: rgba(255, 255, 255, 0.2);
 }
 
-/* Toggle Button */
-.toggle-btn {
+/* Navigation Buttons */
+.nav-btn {
   position: fixed;
   bottom: 32px;
-  right: 32px;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
@@ -502,11 +502,19 @@ body {
   padding: 0;
 }
 
-.toggle-btn:hover {
+.nav-btn-left {
+  left: 32px;
+}
+
+.nav-btn-right {
+  right: 32px;
+}
+
+.nav-btn:hover:not(.disabled) {
   background: rgba(255, 255, 255, 0.15);
 }
 
-.toggle-btn svg {
+.nav-btn svg {
   width: 20px;
   height: 20px;
   stroke: rgba(255, 255, 255, 0.6);
@@ -514,8 +522,275 @@ body {
   transition: stroke 0.2s ease;
 }
 
-.toggle-btn:hover svg {
+.nav-btn:hover:not(.disabled) svg {
   stroke: rgba(255, 255, 255, 0.9);
+}
+
+.nav-btn.disabled {
+  opacity: 0.2;
+  cursor: default;
+}
+
+/* ========== KANBAN BOARD STYLES ========== */
+.kanban-container {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1400px;
+  flex: 1;
+  animation: fadeIn 0.5s ease-out;
+  padding-top: 4vh;
+  min-height: 0;
+}
+
+.kanban-container.active {
+  display: flex;
+}
+
+.kanban-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.kanban-title {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.kanban-add-col-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.kanban-add-col-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.kanban-board {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 60px;
+  min-height: 69vh;
+  max-height: calc(100vh - 160px);
+}
+
+.kanban-board::-webkit-scrollbar {
+  height: 6px;
+}
+
+.kanban-board::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.kanban-board::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.kanban-column {
+  flex: 1 1 0;
+  min-width: 200px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+
+.kanban-column.drag-over {
+  border-color: #FFA31A;
+  background: rgba(255, 163, 26, 0.05);
+}
+
+.kanban-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 12px;
+  flex-shrink: 0;
+}
+
+.kanban-column-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.5);
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  cursor: text;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.kanban-column-title:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.kanban-column-title:focus {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.kanban-column-count {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  font-variant-numeric: tabular-nums;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.kanban-column-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.kanban-col-delete-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.kanban-col-delete-btn:hover {
+  color: #ff4444;
+  background: rgba(255, 68, 68, 0.1);
+}
+
+.kanban-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 12px 12px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 40px;
+}
+
+.kanban-cards::-webkit-scrollbar {
+  width: 4px;
+}
+
+.kanban-cards::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.kanban-cards::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.kanban-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px;
+  cursor: grab;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.kanban-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.kanban-card:active {
+  cursor: grabbing;
+}
+
+.kanban-card.dragging {
+  opacity: 0.4;
+}
+
+.kanban-card-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  width: 100%;
+  resize: none;
+  cursor: text;
+  padding: 0;
+  display: block;
+}
+
+.kanban-card-text:focus {
+  color: #fff;
+}
+
+.kanban-card-delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.0);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.kanban-card:hover .kanban-card-delete {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.kanban-card-delete:hover {
+  color: #ff4444 !important;
+  background: rgba(255, 68, 68, 0.1);
+}
+
+.kanban-add-card-btn {
+  background: none;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0 12px 12px;
+  flex-shrink: 0;
+}
+
+.kanban-add-card-btn:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 /* ========== RESPONSIVE STYLES ========== */
@@ -570,15 +845,19 @@ body {
     padding: 20px;
     border-radius: 10px;
   }
-  .toggle-btn {
+  .nav-btn {
     bottom: 24px;
-    right: 24px;
     width: 40px;
     height: 40px;
   }
-  .toggle-btn svg {
+  .nav-btn-left { left: 24px; }
+  .nav-btn-right { right: 24px; }
+  .nav-btn svg {
     width: 18px;
     height: 18px;
+  }
+  .kanban-column {
+    min-width: 180px;
   }
 }
 
@@ -640,14 +919,24 @@ body {
     gap: 20px;
     font-size: 12px;
   }
-  .toggle-btn {
+  .nav-btn {
     bottom: 16px;
-    right: 16px;
     width: 36px;
     height: 36px;
   }
-  .toggle-btn svg {
+  .nav-btn-left { left: 16px; }
+  .nav-btn-right { right: 16px; }
+  .nav-btn svg {
     width: 16px;
     height: 16px;
+  }
+  .kanban-column {
+    min-width: 150px;
+  }
+  .kanban-header {
+    margin-bottom: 16px;
+  }
+  .kanban-title {
+    font-size: 20px;
   }
 }
