@@ -68,19 +68,31 @@
     </div>
   </div>
   
-  <div class="footer">
+  <!-- Kanban Board Screen -->
+  <div class="kanban-container" id="kanban-screen">
+    <div class="kanban-header">
+      <h1 class="kanban-title">Board</h1>
+      <button class="kanban-add-col-btn" id="add-column-btn">+ Column</button>
+    </div>
+    <div class="kanban-board" id="kanban-board"></div>
+  </div>
+
+  <div class="footer" id="footer">
     <span class="footer-line"></span>
     <span>created by Vic</span>
     <span class="footer-line"></span>
   </div>
 
-  <!-- Toggle Button -->
-  <button class="toggle-btn" id="toggle-btn">
+  <!-- Navigation Buttons -->
+  <button class="nav-btn nav-btn-left" id="nav-left">
     <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="17 1 21 5 17 9"></polyline>
-      <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
-      <polyline points="7 23 3 19 7 15"></polyline>
-      <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+
+  <button class="nav-btn nav-btn-right" id="nav-right">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"></polyline>
     </svg>
   </button>
 
