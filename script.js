@@ -322,7 +322,13 @@ function showScreen(index) {
     footer.style.display = '';
   } else if (screens[index] === 'kanban') {
     kanbanScreen.classList.add('active');
-    footer.style.display = 'none';
+    footer.style.display = '';
+    // Re-measure textarea heights now that the screen is visible
+    // (scrollHeight returns 0 when display:none)
+    kanbanScreen.querySelectorAll('.kanban-card-text').forEach(function(ta) {
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+    });
   }
 
   // Update arrow states
@@ -339,6 +345,15 @@ function navigateRight() {
 }
 
 // ========== KANBAN BOARD ==========
+const CARD_COLORS = [
+  { name: 'Terracotta', hex: '#D08B6A' },
+  { name: 'Lavender', hex: '#9B9FD7' },
+  { name: 'Sage', hex: '#7D8C6E' },
+  { name: 'Golden', hex: '#C49A5A' },
+  { name: 'Rose', hex: '#C45A5A' },
+  { name: 'Sky', hex: '#5A9EC4' }
+];
+
 let kanbanData = {
   columns: [
     { id: 'col-1', title: 'Backlog', cards: [] },
@@ -354,18 +369,25 @@ function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
 
+function stripEmptyCards() {
+  kanbanData.columns.forEach(function(col) {
+    col.cards = col.cards.filter(function(c) { return c.text && c.text.trim(); });
+  });
+}
+
 function loadKanbanData() {
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
     chrome.storage.local.get('kanbanData', function(result) {
       if (result.kanbanData) {
         kanbanData = result.kanbanData;
       } else {
-        // Try localStorage as fallback
         var saved = localStorage.getItem('kanbanData');
         if (saved) {
           try { kanbanData = JSON.parse(saved); } catch (e) {}
         }
       }
+      stripEmptyCards();
+      saveKanbanData();
       renderKanbanBoard();
     });
   } else {
@@ -373,6 +395,8 @@ function loadKanbanData() {
     if (saved) {
       try { kanbanData = JSON.parse(saved); } catch (e) {}
     }
+    stripEmptyCards();
+    saveKanbanData();
     renderKanbanBoard();
   }
 }
@@ -532,6 +556,11 @@ function createCardElement(card, columnId) {
   cardEl.draggable = true;
   cardEl.dataset.cardId = card.id;
 
+  // Apply saved color bar
+  if (card.color) {
+    cardEl.style.borderLeftColor = card.color;
+  }
+
   var textarea = document.createElement('textarea');
   textarea.className = 'kanban-card-text';
   textarea.value = card.text;
@@ -607,8 +636,46 @@ function createCardElement(card, columnId) {
     });
   });
 
+  // Color picker dots
+  var colorsDiv = document.createElement('div');
+  colorsDiv.className = 'kanban-card-colors';
+
+  CARD_COLORS.forEach(function(c) {
+    var dot = document.createElement('button');
+    dot.className = 'kanban-color-dot';
+    if (card.color === c.hex) dot.classList.add('active');
+    dot.style.background = c.hex;
+    dot.title = c.name;
+    dot.addEventListener('click', function(e) {
+      e.stopPropagation();
+      card.color = c.hex;
+      cardEl.style.borderLeftColor = c.hex;
+      // Update active states
+      colorsDiv.querySelectorAll('.kanban-color-dot').forEach(function(d) { d.classList.remove('active'); });
+      colorsDiv.querySelector('.kanban-color-clear').classList.remove('active');
+      dot.classList.add('active');
+      saveKanbanData();
+    });
+    colorsDiv.appendChild(dot);
+  });
+
+  var clearBtn = document.createElement('button');
+  clearBtn.className = 'kanban-color-clear';
+  if (!card.color) clearBtn.classList.add('active');
+  clearBtn.title = 'Clear color';
+  clearBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    card.color = null;
+    cardEl.style.borderLeftColor = 'transparent';
+    colorsDiv.querySelectorAll('.kanban-color-dot').forEach(function(d) { d.classList.remove('active'); });
+    clearBtn.classList.add('active');
+    saveKanbanData();
+  });
+  colorsDiv.appendChild(clearBtn);
+
   cardEl.appendChild(textarea);
   cardEl.appendChild(deleteBtn);
+  cardEl.appendChild(colorsDiv);
   return cardEl;
 }
 
