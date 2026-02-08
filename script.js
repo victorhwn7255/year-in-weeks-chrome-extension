@@ -323,6 +323,12 @@ function showScreen(index) {
   } else if (screens[index] === 'kanban') {
     kanbanScreen.classList.add('active');
     footer.style.display = 'none';
+    // Re-measure textarea heights now that the screen is visible
+    // (scrollHeight returns 0 when display:none)
+    kanbanScreen.querySelectorAll('.kanban-card-text').forEach(function(ta) {
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+    });
   }
 
   // Update arrow states
@@ -354,18 +360,25 @@ function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
 
+function stripEmptyCards() {
+  kanbanData.columns.forEach(function(col) {
+    col.cards = col.cards.filter(function(c) { return c.text && c.text.trim(); });
+  });
+}
+
 function loadKanbanData() {
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
     chrome.storage.local.get('kanbanData', function(result) {
       if (result.kanbanData) {
         kanbanData = result.kanbanData;
       } else {
-        // Try localStorage as fallback
         var saved = localStorage.getItem('kanbanData');
         if (saved) {
           try { kanbanData = JSON.parse(saved); } catch (e) {}
         }
       }
+      stripEmptyCards();
+      saveKanbanData();
       renderKanbanBoard();
     });
   } else {
@@ -373,6 +386,8 @@ function loadKanbanData() {
     if (saved) {
       try { kanbanData = JSON.parse(saved); } catch (e) {}
     }
+    stripEmptyCards();
+    saveKanbanData();
     renderKanbanBoard();
   }
 }
